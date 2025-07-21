@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>관리자 페이지</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; font-size: 18px; }
+    input, button { font-size: 18px; padding: 6px; margin-bottom: 10px; width: 100%; }
+    select { font-size: 18px; padding: 6px; margin-bottom: 10px; }
+    .record { margin: 10px 0; padding: 10px; border: 1px solid #aaa; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>관리자 예약 현황</h1>
+  <label>최대 예약 인원</label>
+  <input id="limit" type="number" min="1" value="3" />
+  <button onclick="setLimit()">설정하기</button>
+
+  <label>날짜 선택</label>
+  <input type="date" id="date" />
+  <button onclick="load()">예약 내역 보기</button>
+  <div id="result"></div>
+
+  <script>
+    function setLimit() {
+      const limit = document.getElementById("limit").value;
+      localStorage.setItem("limit", limit);
+      alert("최대 예약 인원이 설정되었습니다.");
+    }
+
+    function load() {
+      const date = document.getElementById("date").value;
+      const key = `resv-${date}`;
+      const data = JSON.parse(localStorage.getItem(key) || "[]");
+      const container = document.getElementById("result");
+      container.innerHTML = data.length === 0 ? "예약 내역이 없습니다." : "";
+      data.forEach((item, idx) => {
+        const div = document.createElement("div");
+        div.className = "record";
+        div.innerText = `[${idx + 1}] 항공사: ${item.airline} | 문항수: ${item.count} | 서비스: ${item.service} | 카카오톡: ${item.kakao}`;
+        container.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>
